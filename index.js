@@ -39,7 +39,13 @@ app.get('/movies', (req, res) => {
     res.json(topMovies);
 });
 
+app.get('/', (req, res) => {
+    res.send('Enjoy the movie list!');
+})
 
+app.listen(8080, () => {
+    console.log('listening');
+});
 
 
 
