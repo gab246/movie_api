@@ -40,8 +40,10 @@ app.get('/movies', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send('Enjoy the movie list!');
+    res.send('Enjoy the movie!');
 })
+
+app.use(express.static('public'));
 
 app.listen(8080, () => {
     console.log('listening');
