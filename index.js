@@ -9,47 +9,12 @@ app.use(morgan('common'));
 const accessLog = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
 app.use(morgan('combined', {stream: accessLog}));
 
-let topMovies = [
-        {
-            title: 'Matilda'
-        },
-        {
-            title: 'The Blind Side'
-        },
-        {
-            title: 'The Princess Diaries'
-        },
-        {
-            title: 'Witness'
-        },
-        {
-            title: 'She\'s the Man'
-        },
-        {
-            title: 'Fast and Furious'
-        },
-        {
-            title: 'Spy'
-        },
-        {
-            title: 'Divergent'
-        },
-        {
-            title: 'Avengers'
-        },
-        {
-            title: 'Her'
-        }
-                
-    ];
-
-app.get('/movies', (req, res) => {
-    res.json(topMovies);
-});
 
 app.get('/', (req, res) => {
     res.send('Enjoy the movie!');
 })
+
+
 
 app.use(express.static('public'));
 
