@@ -66,7 +66,31 @@
             <td>PUT</td>
             <td>:username</td>
             <td>-</td>
-            <td>a message indication whether the username was updated</td>
+            <td>a message indicating whether the username was updated</td>
+        </tr>
+        <tr>
+            <td>Allow users to add a movie to their list of favourite</td>
+            <td>/movie/:id/:movieTitle</td>
+            <td>POST</td>
+            <td>:id/:movieTitle</td>
+            <td>-</td>
+            <td>a message indicating whether the movie was added to the list </td>
+        </tr>
+        <tr>
+            <td>Allow users to remove a movie from their list of favourites</td>
+            <td>/movie/:id/:movieTitle</td>
+            <td>DELETE</td>
+            <td>:id/:movieTitle</td>
+            <td>-</td>
+            <td>a messaging indicating the movie was deleted from the list </td>
+        </tr>
+        <tr>
+            <td>Allow existing users to deregister</td>
+            <td>/users/:username</td>
+            <td>DELETE</td>
+            <td>:username</td>
+            <td>-</td>
+            <td>a message indicating the user email has been removed</td>
         </tr>
     </table>
 
