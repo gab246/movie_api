@@ -9,5 +9,90 @@
 <body>
     <h1>MyFlix </h1><br>
     <p>This movie web application allows users to access information about various movies and directors across multiple genres. Users are able to sign up to the application, update their personal details, as well as create a list of their favourite moives.</p>
+    
+    <h2>URl Endpoints and Request Methods documentation</h2>
+    <table>
+        <tr>
+            <th>Business Logic</th>
+            <th>URL</th>
+            <th>HTTP Method</th>
+            <th>Parameters</th>
+            <th>Request Body Data Format</th>
+            <th>Response Body Data Format</th>
+        </tr>
+        <tr>
+            <td>Return a list of all movies to the user</td>
+            <td>/movies</td>
+            <td>GET</td>
+            <td>-</td>
+            <td>-</td>
+            <td>a JSON object containing data about all the movies</td>
+        </tr>
+        <tr>
+            <td>Return data (description, genre, director, image URL) about a single movie according to title</td>
+            <td>/movies/:name</td>
+            <td>GET</td>
+            <td>:name</td>
+            <td>-</td>
+            <td> a JSON object containing data about a single movie</td>
+        </tr>
+        <tr>
+            <td>Returns data about a genre by title</td>
+            <td>/movies/:name/:genre</td>
+            <td>GET</td>
+            <td>:name/:genre</td>
+            <td>-</td>
+            <td>a JSON object containing data about a specific genre of a movie</td>
+        </tr>
+        <tr>
+            <td>Return data about a director (bio, birth year, death year) by name</td>
+            <td>/director/:directorName</td>
+            <td>GET</td>
+            <td>:directorName</td>
+            <td>-</td>
+            <td>a JSON object containing data about specific director</td>
+        </tr>
+        <tr>
+            <td>Allow new users to register</td>
+            <td>/users</td>
+            <td>POST</td>
+            <td>-</td>
+            <td>a JSON object holding data about the user to add</td>
+            <td>a JSON object containing data about the user that was added</td>
+        </tr>
+        <tr>
+            <td>Allow users to update their username information</td>
+            <td>/users/:username</td>
+            <td>PUT</td>
+            <td>:username</td>
+            <td>-</td>
+            <td>a message indicating whether the username was updated</td>
+        </tr>
+        <tr>
+            <td>Allow users to add a movie to their list of favourite</td>
+            <td>/movies/:id/:movieTitle</td>
+            <td>POST</td>
+            <td>:id/:movieTitle</td>
+            <td>-</td>
+            <td>a message indicating whether the movie was added to the list </td>
+        </tr>
+        <tr>
+            <td>Allow users to remove a movie from their list of favourites</td>
+            <td>/movies/:id/:movieTitle</td>
+            <td>DELETE</td>
+            <td>:id/:movieTitle</td>
+            <td>-</td>
+            <td>a messaging indicating the movie was deleted from the list </td>
+        </tr>
+        <tr>
+            <td>Allow existing users to deregister</td>
+            <td>/users/:username</td>
+            <td>DELETE</td>
+            <td>:username</td>
+            <td>-</td>
+            <td>a message indicating the user email has been removed</td>
+        </tr>
+    </table>
+
 </body>
 </html>
