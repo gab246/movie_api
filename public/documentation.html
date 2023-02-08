@@ -30,17 +30,17 @@
         </tr>
         <tr>
             <td>Return data (description, genre, director, image URL) about a single movie according to title</td>
-            <td>/movies/:name</td>
+            <td>/movies/:title</td>
             <td>GET</td>
-            <td>:name</td>
+            <td>:title</td>
             <td>-</td>
             <td> a JSON object containing data about a single movie</td>
         </tr>
         <tr>
             <td>Returns data about a genre by title</td>
-            <td>/movies/:name/:genre</td>
+            <td>/movies/genre/:genreTitle</td>
             <td>GET</td>
-            <td>:name/:genre</td>
+            <td>/:genreTitle</td>
             <td>-</td>
             <td>a JSON object containing data about a specific genre of a movie</td>
         </tr>
@@ -62,33 +62,33 @@
         </tr>
         <tr>
             <td>Allow users to update their username information</td>
-            <td>/users/:username</td>
+            <td>/users/:id</td>
             <td>PUT</td>
-            <td>:username</td>
+            <td>:id</td>
             <td>-</td>
             <td>a message indicating whether the username was updated</td>
         </tr>
         <tr>
             <td>Allow users to add a movie to their list of favourite</td>
-            <td>/movies/:id/:movieTitle</td>
+            <td>/movies/:id/:Title</td>
             <td>POST</td>
-            <td>:id/:movieTitle</td>
+            <td>:id/:Title</td>
             <td>-</td>
             <td>a message indicating whether the movie was added to the list </td>
         </tr>
         <tr>
             <td>Allow users to remove a movie from their list of favourites</td>
-            <td>/movies/:id/:movieTitle</td>
+            <td>/movies/:id/:Title</td>
             <td>DELETE</td>
-            <td>:id/:movieTitle</td>
+            <td>:id/:Title</td>
             <td>-</td>
             <td>a messaging indicating the movie was deleted from the list </td>
         </tr>
         <tr>
             <td>Allow existing users to deregister</td>
-            <td>/users/:username</td>
+            <td>/users/:id</td>
             <td>DELETE</td>
-            <td>:username</td>
+            <td>:id</td>
             <td>-</td>
             <td>a message indicating the user email has been removed</td>
         </tr>
