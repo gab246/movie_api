@@ -1,23 +1,24 @@
 const express = require('express'),
-    morgan = require('morgan'),
-    fs = require ('fs'),
-    path = require('path');
-
+const morgan = require('morgan'),
+const fs = require ('fs'),
+const path = require('path');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-
 const Movies = Models.Movie;
 const Users = Models.User;
+const bodyParser = require('body-parser');
 
 const app = express();
 app.use(morgan('common'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const accessLog = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
 app.use(morgan('combined', {stream: accessLog}));
 
 
 app.get('/', (req, res) => {
-    res.send('Enjoy the movie!');
+    res.send('Enjoy the selection');
 })
 
 
@@ -41,12 +42,51 @@ app.get('/director/:directorName', (req, res) => {
             });
 
 app.post('/users', (req, res) => {
-    res.send('Created new user');
+    Users.findOne({ Username: req.body.Username })
+        .then((user) => {
+          if (user) {
+            return res.status(400).send(req.body.Username + 'already exists');
+          } else {
+            Users
+              .create({
+                Username: req.body.Username,
+                Password: req.body.Password,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+              })
+              .then((user) =>{res.status(201).json(user) })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            })
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
         });
+    });
+    
         
 app.put('/users/:username', (req, res) => {
-    res.send('Updated user information')
-        });
+    Users.findOneAndUpdate({ Username: req.params.Username}, {$set:
+        {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+        }
+    },
+                           {new: true},
+                           (err, updateduser) => {
+        if(err){
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updatedUser);
+        }
+    });
+});
         
 app.post('/movies/:id/:movieTitle', (req, res) => {
     res.send('Movie has been added to the favourites list');
