@@ -79,7 +79,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
     Users.findOne({ Username: req.body.Username})
         .then((user) => {
           if (user) {
-            return res.status(400).send(req.body.Username + 'already exists');
+            return res.status(400).send(req.body.Username + ' already exists');
           } else {
             Users
               .create({
@@ -102,7 +102,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
     });
     
       //update user info
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }),(req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
     {
       Username: req.body.Username,
@@ -111,7 +111,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),(re
       Birthday: req.body.Birthday
     }
   },
-  { new: true }, // This line makes sure that the updated document is returned
+  { new: true }, // makes sure that the updated document is returned
   (err, updatedUser) => {
     if(err) {
       console.error(err);
