@@ -7,7 +7,11 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
-
+const cors = require('cors');
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
+const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -20,9 +24,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
-let auth = require('./auth')(app);
-const passport = require('passport');
-require('./passport');
+app.use(cors());
+
+
 
 
 app.get('/', (req, res) => {
@@ -75,7 +79,19 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
     });
             });
 
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users', passport.authenticate('jwt', { session: false }), 
+    [
+    check('Username', 'Username is required and the minimum length is 6 characters').isLength({min: 6}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+    
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username})
         .then((user) => {
           if (user) {
@@ -84,7 +100,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
             Users
               .create({
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashedPassword,
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
               })
@@ -99,14 +115,26 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
           console.error(error);
           res.status(500).send('Error: ' + error);
         });
-    });
-    
+});
+
       //update user info
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), 
+[
+    check('Username', 'Username is required and the minimum length is 6 characters').isLength({min: 6}),
+    check('Username', 'Username contains non alphanumeric chracters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ],(req, res) => {
+   
+    let errors = validationResult(req);
+    if (!errors.isEmpty()){
+        return res.status(422).json({ errors: errors.array () });
+    }
+let hashedPassword = Users.hashPassword(req.body.Password);  
+    Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
     {
       Username: req.body.Username,
-      Password: req.body.Password,
+      Password: hashedPassword,
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
@@ -178,6 +206,3 @@ app.use((err, req, res, next) =>{
 app.listen(8080, () => {
     console.log('listening');
 });
-
-
-
