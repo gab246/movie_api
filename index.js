@@ -7,15 +7,14 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
-require('dotenv').config();
 
 
 const Movies = Models.Movie;
 const Users = Models.User;
 const accessLog = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'});
 
-mongoose.connect('mongodb://localhost:27017/mfDB', { useNewUrlParser: true, useUnifiedTopology: true });
-// mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect('mongodb://localhost:27017/mfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
@@ -124,39 +123,36 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   });
 });
       
-
-    // Add movie to a user's favorites
-app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-       $push: { FavoriteMovies: req.params.MovieID }
-     },
-     { new: true }, // This line makes sure that the updated document is returned
-    (err, updatedUser) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
-    });
-  });
-       
-//delete movie from favorites
-app.delete('/users/:Username/movies/:MovieID', (req, res) => {
-    Users.findOneAndUpdate({Username: req.params.Username}, {
-        $pull: { FavoriteMovies: req.params.MovieID}
+//add movie to favorites
+app.post('/movies/:id/:movieTitle', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Users.findOneAndUpdate({id: req.params.id}, {
+        $push: { FavoriteMovies: req.params.movieTitle}
     },
-    {new:true},
+        {new:true},
         (err, updateUser) => {
         if (err){
             console.error(err);
-                res.status(500).send('Error: ' + err);
-            } else {
-                res.json(updateUser);
-            }
-        });
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updateUser);
+        }
     });
-
+        });
+       
+//delete movie from favorites
+app.delete('/movies/:id/:movieTitle', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Movies.findOneAndRemove({movieTitle: req.params.movieTitle}).then((movie)=>{
+        if (!movie) {
+            res.status(400).send(req.params.movieTitle + ' was not found');
+        } else {
+            res.status(200).send(req.params.movieTitle + ' was deleted.');
+        }
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+        });
       
 //delete user
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
