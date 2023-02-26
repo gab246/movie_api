@@ -22,10 +22,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
+const cors = require('cors');
+app.use(cors());
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
+const { check, validationResult } = require('express-validator');
 
 app.get('/', (req, res) => {
     res.send('Enjoy the selection');
@@ -77,8 +80,20 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
     });
             });
 
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOne({ Username: req.body.Username})
+app.post('/users',  [
+    check('Username', 'Username is required and must have a minimum of 6 characters').isLength({min: 6}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ],
+   passport.authenticate('jwt', { session: false }), (req, res) => {
+    // checks - validation object for errors
+let errors = validationResult(req);
+if (!errors.isEmpty()) {
+  return res.status(422).json({ errors: errors.array() });
+}
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOne({Username: req.body.Username})
         .then((user) => {
           if (user) {
             return res.status(400).send(req.body.Username + ' already exists');
@@ -86,11 +101,11 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
             Users
               .create({
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashedPassword,
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
               })
-              .then((user) =>{res.status(201).json(user) })
+            .then((user) =>{res.status(201).json(user) })
             .catch((error) => {
               console.error(error);
               res.status(500).send('Error: ' + error);
@@ -104,8 +119,19 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
     });
     
       //update user info
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+app.put('/users/:Username', [
+    check('Username', 'Username is required and must have a minimum of 6 characters').isLength({min: 6}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ],
+  passport.authenticate('jwt', { session: false }), (req, res) => {
+    let errors = validationResult(req);
+if (!errors.isEmpty()) {
+  return res.status(422).json({ errors: errors.array() });
+}
+let hashedPassword = Users.hashPassword(req.body.Password);
+  Users.findOneAndUpdate({Username: req.params.Username}, { $set:
     {
       Username: req.body.Username,
       Password: req.body.Password,
@@ -127,7 +153,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 
     // Add movie to a user's favorites
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
+    Users.findOneAndUpdate({Username: req.params.Username}, {
        $push: { FavoriteMovies: req.params.MovieID }
      },
      { new: true }, // This line makes sure that the updated document is returned
@@ -142,9 +168,9 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
   });
        
 //delete movie from favorites
-app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({Username: req.params.Username}, {
-        $pull: { FavoriteMovies: req.params.MovieID}
+        $pull: {FavoriteMovies: req.params.MovieID}
     },
     {new:true},
         (err, updateUser) => {
@@ -180,11 +206,9 @@ app.use((err, req, res, next) =>{
     res.status(500).send('There was an error');
 });
 
-
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
-    console.log('Listening on port ' + port);
+ console.log('Listening on Port ' + port);
 });
-
 
 
