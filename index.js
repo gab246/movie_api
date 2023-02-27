@@ -12,6 +12,7 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 const { check, validationResult } = require('express-validator');
+const dotenv = require('dotenv');
 dotenv.config();
 
 const Movies = Models.Movie;
