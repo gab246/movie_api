@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 //get all movies
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
     Movies.find()
     .then((movies) => {
         res.status(200).json(movies);
@@ -123,7 +123,7 @@ app.post('/users',
 });
 
       //update user info
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), 
+app.put('/users/:Username', 
 [
     check('Username', 'Username is required and the minimum length is 6 characters').isLength({min: 6}),
     check('Username', 'Username contains non alphanumeric chracters - not allowed.').isAlphanumeric(),
