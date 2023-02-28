@@ -58,7 +58,7 @@
             <td>POST</td>
             <td>-</td>
             <td>a JSON object holding data about the user to add</td>
-            <td>a mtheod to allow new users to register would be expecting a JSON object containing data about the user that was added</td>
+            <td>a method to allow new users to register would be expecting a JSON object containing data about the user that was added</td>
         </tr>
         <tr>
             <td>Allow users to update their username information</td>
@@ -70,17 +70,17 @@
         </tr>
         <tr>
             <td>Allow users to add a movie to their list of favourite</td>
-            <td>/movies/:id/:movieTitle</td>
+            <td>/users/:Username/movies/:MovieID</td>
             <td>POST</td>
-            <td>:id/:movieTitle</td>
+            <td>/users/:Username/movies/:MovieID</td>
             <td>-</td>
             <td>a message indicating whether the movie was added to the list </td>
         </tr>
         <tr>
             <td>Allow users to remove a movie from their list of favourites</td>
-            <td>/movies/:id/:movieTitle</td>
+            <td>/users/:Username/movies/:MovieID</td>
             <td>DELETE</td>
-            <td>:id/:movieTitle</td>
+            <td>/users/:Username/movies/:MovieID</td>
             <td>-</td>
             <td>a messaging indicating the movie was deleted from the list </td>
         </tr>
