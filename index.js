@@ -109,12 +109,14 @@ app.post('/users',
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
               })
-              .then((user) =>{res.status(201).json(user) })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).send('Error: ' + error);
+              .then((user) => {
+                const token = jwt.sign({ _id: user._id }, 'your_jwt_secret');
+                res.status(201).json({
+                  user: user,
+                  token: token
+                });
             })
-          }
+        }
         })
         .catch((error) => {
           console.error(error);
