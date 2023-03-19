@@ -29,28 +29,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
-let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://desolate-sierra-27780.herokuapp.com/', 'https://desolate-sierra-27780.herokuapp.com/login'];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-}));
-
+app.use(cors());
 
 app.post('/login', function (req, res) {
-    const origin = req.get('origin');
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
     console.log(res.getHeaders()); 
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1234');
     res.status(200).json({status: 200, message: 'Login successful!'});
   });
   
