@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
-let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://desolate-sierra-27780.herokuapp.com/'];
+let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://desolate-sierra-27780.herokuapp.com/', 'https://desolate-sierra-27780.herokuapp.com/login'];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -42,14 +42,16 @@ app.use(cors({
   }
 }));
 
-app.post('/login', function (req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+  app.post('/login', function (req, res) {
+    const origin = req.get('origin');
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.status(200).json({status: 200, message: 'Login successful!'});
   });
   
-
   
 app.get('/', (req, res) => {
     res.send('Enjoy the selection');
