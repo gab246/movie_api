@@ -129,10 +129,13 @@ app.post('/users',
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
               })
-              .then((user) =>{res.status(201).json(user) })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).send('Error: ' + error);
+              .then((user) => {
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.status(201).json(user)
+              })
+                .catch((error) => {
+                console.error(error);
+                res.status(500).send('Error: ' + error);
             })
           }
         })
