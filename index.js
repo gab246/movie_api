@@ -42,11 +42,13 @@ app.use(cors({
   }
 }));
 
-  app.post('/login', function (req, res) {
+
+app.post('/login', function (req, res) {
     const origin = req.get('origin');
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
     }
+    console.log(res.getHeaders()); 
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.status(200).json({status: 200, message: 'Login successful!'});
