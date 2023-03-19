@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
-let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://desolate-sierra-27780.herokuapp.com/'];
+let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://desolate-sierra-27780.herokuapp.com/', 'https://desolate-sierra-27780.herokuapp.com/login'];
 
 app.use(cors({
   origin: (origin, callback) => {
