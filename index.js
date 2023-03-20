@@ -29,13 +29,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
-app.use(cors());
-
+app.use(cors({
+    origin: ['http://localhost:1234', 'http://localhost:8080', 'https://desolate-sierra-27780.herokuapp.com']
+  }));
+  
 app.post('/login', function (req, res) {
     console.log(res.getHeaders()); 
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1234');
     res.status(200).json({status: 200, message: 'Login successful!'});
   });
   
