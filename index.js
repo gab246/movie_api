@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
-const cors = require('cors');
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
@@ -15,6 +14,19 @@ const { check, validationResult } = require('express-validator');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const cors = require('cors');
+let allowedOrigins = ['http://localhost:8080', 'https://desolate-sierra-27780.herokuapp.com/', 'http://localhost:1234'];
+app.use(cors({
+    origin: (origin, callback) => {
+        if(!origin) return callback(null, true);
+        if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+          let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+          return callback(new Error(message ), false);
+        }
+        return callback(null, true);
+      }
+    }));
+  
 const Movies = Models.Movie;
 const Users = Models.User;
 const accessLog = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'});
@@ -29,17 +41,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
-app.use(cors({
-    origin: ['http://localhost:1234', 'http://localhost:8080', 'https://desolate-sierra-27780.herokuapp.com']
-  }));
-  
-app.post('/login', function (req, res) {
-    console.log(res.getHeaders()); 
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.status(200).json({status: 200, message: 'Login successful!'});
-  });
-  
+
   
 app.get('/', (req, res) => {
     res.send('Enjoy the selection');
