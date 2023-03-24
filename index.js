@@ -119,7 +119,6 @@ app.post('/users',
                 Birthday: req.body.Birthday
               })
               .then((user) => {
-                res.setHeader('Access-Control-Allow-Origin', '*');
                 res.status(201).json(user)
               })
                 .catch((error) => {
