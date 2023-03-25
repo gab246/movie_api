@@ -7,9 +7,6 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
-let auth = require('./auth')(app);
-const passport = require('passport');
-require('./passport');
 const { check, validationResult } = require('express-validator');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -39,6 +36,9 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 app.use(express.static('public'));
 app.use(morgan('combined', {stream: accessLog}));
 
