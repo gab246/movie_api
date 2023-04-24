@@ -15,7 +15,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080', 'https://desolate-sierra-27780.herokuapp.com/', 'http://localhost:1234'];
+let allowedOrigins = ['http://localhost:8080', 'https://desolate-sierra-27780.herokuapp.com/', 'http://localhost:1234', 'https://mooviesbymyflix.netlify.app'];
 app.use(cors({
     origin: (origin, callback) => {
         if(!origin) return callback(null, true);
