@@ -21,6 +21,7 @@ let allowedOrigins = [
     'https://gab246.github.io/myFlix-Angular-client',
     'https://gab246.github.io',
     ];
+
 app.use(cors({
     origin: (origin, callback) => {
         if(!origin) return callback(null, true);
